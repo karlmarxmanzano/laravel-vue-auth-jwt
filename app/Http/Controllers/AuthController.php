@@ -6,6 +6,8 @@ use Hash;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+Use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -39,7 +41,7 @@ class AuthController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:6'
         ]);
 
@@ -59,7 +61,9 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        // return response()->json(auth()->user());
+
+        return new UserResource(auth()->user());
     }
 
     /**
@@ -93,7 +97,11 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
+        // return response()->json([
+            
+        // ]);
+
+        return New UserResource([
             'access_token' => $token,
             'user' => auth()->user(),
             'token_type' => 'bearer',
