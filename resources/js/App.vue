@@ -1,19 +1,19 @@
 <template>
-    <div id="app">
-        <theHeader />
-        <router-view />
-    </div>
+  <div id="app">
+    <theHeader />
+    <router-view />
+  </div>
 </template>
 
 <script>
-    import theHeader from './components/views/TheHeader'
+import theHeader from "./views/TheHeader";
 
-    export default {
-        name: 'mainApp',
-        components: {
-            theHeader
-        }
-    }
+export default {
+  name: "mainApp",
+  components: {
+    theHeader
+  }
+};
 </script>
 
 <style scoped>

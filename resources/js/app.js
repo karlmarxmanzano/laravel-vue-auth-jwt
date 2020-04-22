@@ -4,8 +4,8 @@ require("./bootstrap");
 
 import Vue from "vue";
 
-import router from "./components/router/index";
-import store from "./components/store/index";
+import router from "./router/index";
+import store from "./store/index";
 
 import mainApp from "./App.vue";
 
@@ -30,17 +30,10 @@ const app = new Vue({
 
             this.$store.commit("auth/SET_USER", userData);
             this.$store.commit("auth/SET_TOKEN", tokenData);
-        }
 
-        axios.interceptors.response.use(
-            response => response,
-            error => {
-                if (error.response.status === 401) {
-                    this.$store.dispatch("auth/signOut");
-                }
-                return Promise.reject(error);
-            }
-        );
+            window.axios.defaults.headers.common["Authorization"] =
+                        "Bearer " + tokenData;
+        }
     }
 });
 // });

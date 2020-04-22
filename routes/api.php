@@ -17,16 +17,26 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-// Route::group(['prefix' => 'auth'], function() {
-//     Route::post('signin', 'SignInController');
-//     Route::post('signout', 'SignOutController');
-//     Route::get('signin', 'MeController');
-// });
-
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('signin', 'AuthController@signin');
     Route::post('signup', 'AuthController@signup');
     Route::post('signout', 'AuthController@signout');
     Route::post('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
+});
+
+Route::group(['middleware' => 'api', 'prefix' => 'permissions'], function () {
+    Route::get('/', 'PermissionController@index');
+    Route::post('/', 'PermissionController@store');
+    Route::get('{permission}', 'PermissionController@show');
+    Route::put('{permission}', 'PermissionController@update');
+    Route::delete('{permission}', 'PermissionController@destroy');
+});
+
+Route::group(['middleware' => 'api', 'prefix' => 'roles'], function () {
+    Route::get('/', 'RoleController@index');
+    Route::post('/', 'RoleController@store');
+    Route::get('{role}', 'RoleController@show');
+    Route::patch('{role}', 'RoleController@update');
+    Route::delete('{role}', 'RoleController@delete');
 });
