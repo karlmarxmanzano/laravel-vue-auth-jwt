@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "signin",
   data() {
@@ -60,14 +62,14 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", ["signIn"]),
     onSignIn() {
-      this.$store
-        .dispatch("auth/signIn", this.form)
+      this.signIn(this.form)
         .then(() => {
-          this.$router.replace({ name: "dashboard" });
+          this.$router.push({ name: "dashboard" });
         })
-        .catch(() => {
-          this.$router.replace({ name: "home" });
+        .catch(err => {
+          console.log(err.response.data.error);
         });
     }
   },

@@ -20,45 +20,59 @@ export default {
         signIn({ commit }, credentials) {
             return axios
                 .post("/auth/signin", credentials)
-                .then(res => {
-                    console.log(res.data);
-                })
-                .catch(err => console.log(err));
-        },
-        signUp({ dispatch }, user) {
-            return axios
-                .post("/auth/signup", user)
-                .then(res => {
-                    dispatch("attempt", res.data.access_token);
+                .then(response => {
+                    commit("SET_TOKEN", response.data.data.access_token);
+                    commit("SET_USER", response.data.data.user);
+
+                    window.axios.defaults.headers.common["Authorization"] =
+                        "Bearer " + response.data.data.access_token;
+
+                    localStorage.setItem(
+                        "token",
+                        JSON.stringify(response.data.data.access_token)
+                    );
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(response.data.data.user)
+                    );
                 })
                 .catch(error => {
                     console.log(error.response);
+
+                    commit("SET_TOKEN", null);
+                    commit("SET_USER", null);
+                    localStorage.setItem("token", "");
+                    localStorage.setItem("user", "");
                 });
         },
-        attempt({ commit, state }, token) {
-            if (token) {
-                commit("SET_TOKEN", token);
-                window.axios.defaults.headers.common["Authorization"] =
-                    "Bearer " + token;
-            }
+        signUp({ commit }, user) {
+            return axios
+                .post("/auth/signup", user)
+                .then(response => {
+                    commit("SET_TOKEN", token);
+                    commit("SET_USER", response.data.user);
 
-            if (!state.token) {
-                return;
-            }
+                    window.axios.defaults.headers.common["Authorization"] =
+                        "Bearer " + token;
 
-            try {
-                let response = await axios.get("/auth/me");
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("user", response.data);
+                })
+                .catch(error => {
+                    console.log(error.response);
 
-                commit("SET_USER", response.data);
-            } catch (err) {
-                commit("SET_TOKEN", null);
-                commit("SET_USER", null);
-            }
+                    commit("SET_TOKEN", null);
+                    commit("SET_USER", null);
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("user", response.data);
+                });
         },
         signOut({ commit }) {
             return axios.post("/auth/signout").then(res => {
                 commit("SET_TOKEN", null);
                 commit("SET_USER", null);
+                localStorage.setItem("token", "");
+                localStorage.setItem("user", "");
             });
         }
     },

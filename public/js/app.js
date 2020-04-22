@@ -2013,6 +2013,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2063,6 +2070,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "signin",
   data: function data() {
@@ -2073,21 +2081,19 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("auth", ["signIn"]), {
     onSignIn: function onSignIn() {
       var _this = this;
 
-      this.$store.dispatch("auth/signIn", this.form).then(function () {
-        _this.$router.replace({
+      this.signIn(this.form).then(function () {
+        _this.$router.push({
           name: "dashboard"
         });
-      })["catch"](function () {
-        _this.$router.replace({
-          name: "home"
-        });
+      })["catch"](function (err) {
+        console.log(err.response.data.error);
       });
     }
-  },
+  }),
   components: {}
 });
 
@@ -54529,20 +54535,39 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // window
 
 
 axios.defaults.headers.common["Accept"] = "application/json";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+axios.defaults.baseURL = "http://127.0.0.1:8000/api"; // store.dispatch("auth/attempt", localStorage.getItem("token")).then(() => {
 
-__webpack_require__(/*! ./components/store/subscriber */ "./resources/js/components/store/subscriber.js");
+var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
+  el: "#app",
+  router: _components_router_index__WEBPACK_IMPORTED_MODULE_1__["default"],
+  store: _components_store_index__WEBPACK_IMPORTED_MODULE_2__["default"],
+  components: {
+    mainApp: _App_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  created: function created() {
+    var _this = this;
 
-_components_store_index__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch("auth/attempt", localStorage.getItem("token")).then(function () {
-  var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-    el: "#app",
-    router: _components_router_index__WEBPACK_IMPORTED_MODULE_1__["default"],
-    store: _components_store_index__WEBPACK_IMPORTED_MODULE_2__["default"],
-    components: {
-      mainApp: _App_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+    var userString = localStorage.getItem("user");
+    var userToken = localStorage.getItem("token");
+
+    if (userString && userToken) {
+      var tokenData = JSON.parse(userToken);
+      var userData = JSON.parse(userString);
+      this.$store.commit("auth/SET_USER", userData);
+      this.$store.commit("auth/SET_TOKEN", tokenData);
     }
-  });
-});
+
+    axios.interceptors.response.use(function (response) {
+      return response;
+    }, function (error) {
+      if (error.response.status === 401) {
+        _this.$store.dispatch("auth/signOut");
+      }
+
+      return Promise.reject(error);
+    });
+  }
+}); // });
 
 /***/ }),
 
@@ -54574,7 +54599,7 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -54617,33 +54642,32 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var routes = [{
-  path: '/',
-  name: 'home',
+  path: "/",
+  name: "home",
   component: _views_Home__WEBPACK_IMPORTED_MODULE_2__["default"]
 }, {
-  path: '/signin',
-  name: 'signin',
+  path: "/signin",
+  name: "signin",
   component: _views_SignIn__WEBPACK_IMPORTED_MODULE_3__["default"]
 }, {
-  path: '/signup',
-  name: 'signup',
+  path: "/signup",
+  name: "signup",
   component: _views_SignUp__WEBPACK_IMPORTED_MODULE_4__["default"]
 }, {
-  path: '/dashboard',
-  name: 'dashboard',
-  component: _views_Dashboard__WEBPACK_IMPORTED_MODULE_5__["default"],
-  beforeEnter: function beforeEnter(to, from, next) {
-    if (!_store_index__WEBPACK_IMPORTED_MODULE_6__["default"].getters['authenticated']) {
-      next({
-        name: 'home'
-      });
-    }
+  path: "/dashboard",
+  name: "dashboard",
+  component: _views_Dashboard__WEBPACK_IMPORTED_MODULE_5__["default"] // beforeEnter: (to, from, next) => {
+  //     if (!store.getters['authenticated']) {
+  //         next({
+  //             name: 'home'
+  //         })
+  //     }
+  //     next();
+  // }
 
-    next();
-  }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  mode: 'history',
+  mode: "history",
   routes: routes
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
@@ -54655,9 +54679,79 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   !*** ./resources/js/components/store/auth.js ***!
   \***********************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\resources\\js\\components\\store\\auth.js: Can not use keyword 'await' outside an async function (50:31)\n\n\u001b[0m \u001b[90m 48 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 49 | \u001b[39m            \u001b[36mtry\u001b[39m {\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 50 | \u001b[39m                let response \u001b[33m=\u001b[39m await axios\u001b[33m.\u001b[39mget(\u001b[32m\"/auth/me\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 51 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 52 | \u001b[39m                commit(\u001b[32m\"SET_USER\"\u001b[39m\u001b[33m,\u001b[39m response\u001b[33m.\u001b[39mdata)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 53 | \u001b[39m            } \u001b[36mcatch\u001b[39m (err) {\u001b[0m\n    at Parser._raise (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:723:17)\n    at Parser.raiseWithData (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:716:17)\n    at Parser.raise (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:710:17)\n    at Parser.checkReservedWord (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10627:14)\n    at Parser.parseIdentifierName (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10589:12)\n    at Parser.parseIdentifier (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10561:23)\n    at Parser.parseExprAtom (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9736:27)\n    at Parser.parseExprSubscripts (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9479:23)\n    at Parser.parseMaybeUnary (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9459:21)\n    at Parser.parseExprOps (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9329:23)\n    at Parser.parseMaybeConditional (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9302:23)\n    at Parser.parseMaybeAssign (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9257:21)\n    at Parser.parseVar (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11565:26)\n    at Parser.parseVarStatement (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11384:10)\n    at Parser.parseStatementContent (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10983:21)\n    at Parser.parseStatement (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10916:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11490:25)\n    at Parser.parseBlockBody (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11477:10)\n    at Parser.parseBlock (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11461:10)\n    at Parser.parseTryStatement (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11349:23)\n    at Parser.parseStatementContent (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10973:21)\n    at Parser.parseStatement (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10916:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11490:25)\n    at Parser.parseBlockBody (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11477:10)\n    at Parser.parseBlock (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:11461:10)\n    at Parser.parseFunctionBody (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10477:24)\n    at Parser.parseFunctionBodyAndFinish (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10446:10)\n    at Parser.parseMethod (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10408:10)\n    at Parser.parseObjectMethod (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10324:19)\n    at Parser.parseObjPropValue (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10366:23)\n    at Parser.parseObjectMember (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10290:10)\n    at Parser.parseObj (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:10211:25)\n    at Parser.parseExprAtom (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9836:28)\n    at Parser.parseExprSubscripts (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9479:23)\n    at Parser.parseMaybeUnary (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9459:21)\n    at Parser.parseExprOps (C:\\Users\\Karl Marx Manzano\\Desktop\\WEB DEV\\PHP\\laravel-vue-auth-jwt\\node_modules\\@babel\\parser\\lib\\index.js:9329:23)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    token: null,
+    user: {}
+  },
+  mutations: {
+    SET_TOKEN: function SET_TOKEN(state, token) {
+      state.token = token;
+    },
+    SET_USER: function SET_USER(state, data) {
+      state.user = data;
+    }
+  },
+  actions: {
+    signIn: function signIn(_ref, credentials) {
+      var commit = _ref.commit;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/auth/signin", credentials).then(function (response) {
+        commit("SET_TOKEN", response.data.data.access_token);
+        commit("SET_USER", response.data.data.user);
+        window.axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.data.access_token;
+        localStorage.setItem("token", JSON.stringify(response.data.data.access_token));
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      })["catch"](function (error) {
+        console.log(error.response);
+        commit("SET_TOKEN", null);
+        commit("SET_USER", null);
+        localStorage.setItem("token", "");
+        localStorage.setItem("user", "");
+      });
+    },
+    signUp: function signUp(_ref2, user) {
+      var commit = _ref2.commit;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/auth/signup", user).then(function (response) {
+        commit("SET_TOKEN", token);
+        commit("SET_USER", response.data.user);
+        window.axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", response.data);
+      })["catch"](function (error) {
+        console.log(error.response);
+        commit("SET_TOKEN", null);
+        commit("SET_USER", null);
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", response.data);
+      });
+    },
+    signOut: function signOut(_ref3) {
+      var commit = _ref3.commit;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/auth/signout").then(function (res) {
+        commit("SET_TOKEN", null);
+        commit("SET_USER", null);
+        localStorage.setItem("token", "");
+        localStorage.setItem("user", "");
+      });
+    }
+  },
+  getters: {
+    authenticated: function authenticated(state) {
+      return !!state.token && !!state.user;
+    },
+    user: function user(state) {
+      return state.user;
+    }
+  }
+});
 
 /***/ }),
 
@@ -54683,44 +54777,6 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
     auth: _auth__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 }));
-
-/***/ }),
-
-/***/ "./resources/js/components/store/subscriber.js":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/store/subscriber.js ***!
-  \*****************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./resources/js/components/store/index.js");
-// import { isEmpty } from "lodash";
-// export const setHttpToken = token => {
-//     if (isEmpty(token)) {
-//         window.axios.defaults.headers.common["Authorization"] = null;
-//     }
-//     window.axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-// };
-
-_index__WEBPACK_IMPORTED_MODULE_0__["default"].subscribe(function (mutation) {
-  switch (mutation.type) {
-    case 'auth/SET_TOKEN':
-      if (mutation.payload) {
-        window.axios.defaults.headers.common["Authorization"] = "Bearer " + mutation.payload;
-        localStorage.setItem('token', mutation.payload);
-      } else {
-        window.axios.defaults.headers.common["Authorization"] = null;
-        localStorage.removeItem('token');
-      }
-
-      break;
-
-    default:
-      break;
-  }
-});
 
 /***/ }),
 

@@ -1,49 +1,49 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import Home from '../views/Home'
-import SignIn from '../views/SignIn'
-import SignUp from '../views/SignUp'
-import Dashboard from '../views/Dashboard'
-import store from '../store/index'
+import Home from "../views/Home";
+import SignIn from "../views/SignIn";
+import SignUp from "../views/SignUp";
+import Dashboard from "../views/Dashboard";
+import store from "../store/index";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/',
-        name: 'home',
+        path: "/",
+        name: "home",
         component: Home
     },
     {
-        path: '/signin',
-        name: 'signin',
+        path: "/signin",
+        name: "signin",
         component: SignIn
     },
     {
-        path: '/signup',
-        name: 'signup',
+        path: "/signup",
+        name: "signup",
         component: SignUp
     },
     {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
-        beforeEnter: (to, from, next) => {
-            if (!store.getters['authenticated']) {
-                next({
-                    name: 'home'
-                })
-            }
+        path: "/dashboard",
+        name: "dashboard",
+        component: Dashboard
+        // beforeEnter: (to, from, next) => {
+        //     if (!store.getters['authenticated']) {
+        //         next({
+        //             name: 'home'
+        //         })
+        //     }
 
-            next();
-        }
+        //     next();
+        // }
     }
-]
+];
 
 const router = new VueRouter({
-    mode: 'history',
+    mode: "history",
     routes
 });
 
-export default router
+export default router;
