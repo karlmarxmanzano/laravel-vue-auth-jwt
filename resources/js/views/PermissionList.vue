@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">Role List</div>
+        <div class="card-header">Permission List</div>
         <div class="card-body">
           <table class="table table-hover">
             <thead>
@@ -29,11 +29,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   computed: {
-    permissions() {
-      return this.$store.getters.getPermissions
-    }
+    ...mapGetters({
+        permissions: 'permission/getPermissions'
+      })
   },
   mounted() {
     this.$store.dispatch('permission/fetchPermissions')

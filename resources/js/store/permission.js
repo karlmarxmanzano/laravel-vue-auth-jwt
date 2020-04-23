@@ -19,11 +19,20 @@ export default {
             axios
                 .get("/permissions")
                 .then(response => {
-                    commit("SET_PERMISSIONS", response.data.data);
+                    commit("SET_PERMISSIONS", response.data);
                 })
                 .catch(error => {
                     console.log(error.response);
                 });
+        },
+        createPermission({ commit }, permission) {
+            axios.post('/permissions')
+                .then(response => {
+                    commit('SET_PERMISSION', response.data.data)
+                })
+                .catch(errpr => {
+
+                })
         }
     },
 
