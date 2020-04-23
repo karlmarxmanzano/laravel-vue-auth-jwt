@@ -11,6 +11,9 @@ export default {
     mutations: {
         SET_PERMISSIONS(state, permissions) {
             state.permissions = permissions;
+        },
+        SET_PERMISSION(state, permission) {
+            state.permission = permission;
         }
     },
 
@@ -26,12 +29,47 @@ export default {
                 });
         },
         createPermission({ commit }, permission) {
-            axios.post('/permissions')
-                .then(response => {
-                    commit('SET_PERMISSION', response.data.data)
+            axios
+                .post('/permissions', {
+                    name: permission
                 })
-                .catch(errpr => {
-
+                .then(response => {
+                    commit('SET_PERMISSION', response.data)
+                })
+                .catch(error => {
+                    console.log(error.response);
+                })
+        },
+        viewPermission({ commit }, permission) {
+            axios
+                .get('permissions/' + permission)
+                .then(response => {
+                    commit('SET_PERMISSION', response.data)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+        },
+        savePermission({ commit }, { permissionId, name }) {
+            axios.post("{permission}/edit", {
+                permissionId,
+                name
+            })
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log(error.data)
+            })
+        },
+        deletePermission({ commit }, permission) {
+            axios
+                .delete('permissions/' + permission)
+                .then(response => {
+                    console.log(response.data.name + ' removed.');
+                })
+                .catch(error => {
+                    console.log(error.response);
                 })
         }
     },
@@ -39,6 +77,9 @@ export default {
     getters: {
         getPermissions(state) {
             return state.permissions;
+        },
+        getPermission(state) {
+            return state.permission;
         }
     }
 };

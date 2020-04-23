@@ -13,6 +13,7 @@ import RoleForm from "../views/RoleForm";
 import Permission from "../views/Permission";
 import PermissionList from "../views/PermissionList";
 import PermissionForm from "../views/PermissionForm";
+import PermissionView from "../views/PermissionView";
 
 import store from "../store/index";
 
@@ -38,15 +39,31 @@ const routes = [
         path: "/dashboard",
         name: "dashboard",
         component: Dashboard
-        // beforeEnter: (to, from, next) => {
-        //     if (!store.getters['authenticated']) {
-        //         next({
-        //             name: 'home'
-        //         })
-        //     }
-
-        //     next();
-        // }
+    },
+    {
+        path: "/permissions",
+        name: "permissions",
+        component: Permission
+    },
+    {
+        path: "/roles/list",
+        name: "permission-list",
+        component: PermissionList
+    },
+    {
+        path: "/permissions/create",
+        name: "permissions-create",
+        component: PermissionForm
+    },
+    {
+        path: "/permissions/:id",
+        name: "permission-view",
+        component: PermissionView
+    },
+    {
+        path: "/permissions/:id/edit",
+        name: "permission-edit",
+        component: PermissionForm
     },
     {
         path: "/roles",
@@ -63,21 +80,6 @@ const routes = [
         name: "role-create",
         component: RoleForm
     },
-    {
-        path: "/permissions",
-        name: "permissions",
-        component: Permission
-    },
-    {
-        path: "/roles/list",
-        name: "permission-list",
-        component: PermissionList
-    },
-    {
-        path: "/permissions/create",
-        name: "permissions-create",
-        component: PermissionForm
-    }
 ];
 
 const router = new VueRouter({

@@ -29,7 +29,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'permissions'], function () {
     Route::get('/', 'PermissionController@index');
     Route::post('/', 'PermissionController@store');
     Route::get('{permission}', 'PermissionController@show');
-    Route::put('{permission}', 'PermissionController@update');
+    Route::put('{permission}/edit', 'PermissionController@update');
     Route::delete('{permission}', 'PermissionController@destroy');
 });
 

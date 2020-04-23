@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="card">
         <div class="card-header">Permission List</div>
         <div class="card-body">
@@ -11,6 +11,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Created At</th>
                 <th scope="col">Updated At</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -19,6 +20,17 @@
                 <td>{{ permission.name }}</td>
                 <td>{{ permission.created_at }}</td>
                 <td>{{ permission.updated_at }}</td>
+                <td>
+                  <router-link
+                    tag="a"
+                    :to="{ name: 'permission-view', params: { id: permission.id } }"
+                  >View</router-link> | 
+                  <router-link
+                    tag="a"
+                    :to="{ name: 'permission-edit', params: { id: permission.id } }"
+                  >Edit</router-link> | 
+                  <a href="#" @click.prevent="onRemovePermission(permission.id)">Delete</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -29,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
@@ -37,8 +49,17 @@ export default {
         permissions: 'permission/getPermissions'
       })
   },
+  methods: {
+    ...mapActions('permission', ['fetchPermissions', 'deletePermission']),
+    onRemovePermission(id) {
+      if (confirm("Do you want to remove this permission?") == true) {
+        this.deletePermission(id)
+        this.fetchPermissions()
+      }
+    }
+  },
   mounted() {
-    this.$store.dispatch('permission/fetchPermissions')
+    this.fetchPermissions()
   }
 };
 </script>

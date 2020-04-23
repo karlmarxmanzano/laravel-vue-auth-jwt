@@ -34,6 +34,16 @@ const app = new Vue({
             window.axios.defaults.headers.common["Authorization"] =
                         "Bearer " + tokenData;
         }
+
+        axios.interceptors.response.use(
+            response => response,
+            error => {
+              if (error.response.status === 401) {
+                this.$store.dispatch('auth/signOut')
+              }
+              return Promise.reject(error)
+            }
+          )
     }
 });
 // });

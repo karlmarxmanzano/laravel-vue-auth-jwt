@@ -110,12 +110,12 @@ export default {
   methods: {
     onSignOut() {
       this.$store.dispatch('auth/signOut')
-        .then(response => {
-          this.$router.push({ name: 'dashboard' })
+        .then(() => {
+          this.$router.push({ name: "dashboard" });
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch(err => {
+          console.log(err.response.data.error);
+        });
     }
   }
 };

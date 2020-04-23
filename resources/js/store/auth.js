@@ -21,19 +21,19 @@ export default {
             return axios
                 .post("/auth/signin", credentials)
                 .then(response => {
-                    commit("SET_TOKEN", response.data.data.access_token);
-                    commit("SET_USER", response.data.data.user);
+                    commit("SET_TOKEN", response.data.access_token);
+                    commit("SET_USER", response.data.user);
 
                     window.axios.defaults.headers.common["Authorization"] =
-                        "Bearer " + response.data.data.access_token;
+                        "Bearer " + response.data.access_token;
 
                     localStorage.setItem(
                         "token",
-                        JSON.stringify(response.data.data.access_token)
+                        JSON.stringify(response.data.access_token)
                     );
                     localStorage.setItem(
                         "user",
-                        JSON.stringify(response.data.data.user)
+                        JSON.stringify(response.data.user)
                     );
                 })
                 .catch(error => {
