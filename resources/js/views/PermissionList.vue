@@ -1,43 +1,34 @@
 <template>
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">Permission List</div>
-        <div class="card-body">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Created At</th>
-                <th scope="col">Updated At</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="permission in permissions" :key="permission.id">
-                <td>{{ permission.id }}</td>
-                <td>{{ permission.name }}</td>
-                <td>{{ permission.created_at }}</td>
-                <td>{{ permission.updated_at }}</td>
-                <td>
-                  <router-link
-                    tag="a"
-                    :to="{ name: 'permission-view', params: { id: permission.id } }"
-                  >View</router-link> | 
-                  <router-link
-                    tag="a"
-                    :to="{ name: 'permission-edit', params: { id: permission.id } }"
-                  >Edit</router-link> | 
-                  <a href="#" @click.prevent="onRemovePermission(permission.id)">Delete</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Created At</th>
+        <th scope="col">Updated At</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="permission in permissions" :key="permission.id">
+        <td>{{ permission.id }}</td>
+        <td>{{ permission.name }}</td>
+        <td>{{ permission.created_at }}</td>
+        <td>{{ permission.updated_at }}</td>
+        <td>
+          <router-link
+            tag="a"
+            :to="{ name: 'permission-view', params: { id: permission.id } }"
+          >View</router-link> | 
+          <router-link
+            tag="a"
+            :to="{ name: 'permission-edit', params: { id: permission.id } }"
+          >Edit</router-link> | 
+          <a href="#" @click.prevent="onRemovePermission(permission.id)">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>

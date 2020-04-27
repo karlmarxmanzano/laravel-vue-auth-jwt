@@ -68,12 +68,17 @@ export default {
                 });
         },
         signOut({ commit }) {
-            return axios.post("/auth/signout").then(res => {
-                commit("SET_TOKEN", null);
-                commit("SET_USER", null);
-                localStorage.setItem("token", "");
-                localStorage.setItem("user", "");
-            });
+            return axios
+                .post("/auth/signout")
+                .then(response => {
+                    commit("SET_TOKEN", null);
+                    commit("SET_USER", null);
+                    localStorage.setItem("token", "");
+                    localStorage.setItem("user", "");
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
         }
     },
 

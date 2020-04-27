@@ -12,7 +12,8 @@ import RoleForm from "../views/RoleForm";
 
 import Permission from "../views/Permission";
 import PermissionList from "../views/PermissionList";
-import PermissionForm from "../views/PermissionForm";
+import PermissionCreate from "../views/PermissionCreate";
+import PermissionEdit from "../views/PermissionEdit";
 import PermissionView from "../views/PermissionView";
 
 import store from "../store/index";
@@ -53,7 +54,7 @@ const routes = [
     {
         path: "/permissions/create",
         name: "permissions-create",
-        component: PermissionForm
+        component: PermissionCreate
     },
     {
         path: "/permissions/:id",
@@ -63,7 +64,8 @@ const routes = [
     {
         path: "/permissions/:id/edit",
         name: "permission-edit",
-        component: PermissionForm
+        component: PermissionEdit,
+        props: true
     },
     {
         path: "/roles",

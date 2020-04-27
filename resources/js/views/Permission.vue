@@ -1,13 +1,21 @@
 <template>
   <div class="container">
-    <div class="row">
-      <router-link
-        class="btn btn-success"
-        tag="button"
-        :to="{ name: 'permissions-create' }"
-      >Add new permission</router-link>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Permission</div>
+          <div class="card-body">
+            <router-link
+              class="btn btn-success float-right mb-4"
+              tag="button"
+              :to="{ name: 'permissions-create' }"
+            >Add new permission</router-link>
+
+            <PermissionList />
+          </div>
+        </div>
+      </div>
     </div>
-    <PermissionList />
   </div>
 </template>
 

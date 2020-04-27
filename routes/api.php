@@ -25,11 +25,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::get('me', 'AuthController@me');
 });
 
-Route::group(['middleware' => 'api', 'prefix' => 'permissions'], function () {
+Route::group(['prefix' => 'permissions'], function () {
     Route::get('/', 'PermissionController@index');
     Route::post('/', 'PermissionController@store');
     Route::get('{permission}', 'PermissionController@show');
-    Route::put('{permission}/edit', 'PermissionController@update');
+    Route::patch('{permission}', 'PermissionController@update');
     Route::delete('{permission}', 'PermissionController@destroy');
 });
 
