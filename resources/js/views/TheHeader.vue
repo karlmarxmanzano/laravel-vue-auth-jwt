@@ -36,9 +36,17 @@
               <router-link
                 class="nav-link"
                 tag="a"
-                :to="{ name: 'dashboard' }"
+                :to="{ name: 'users' }"
                 active-class="active"
-              >Dashboard</router-link>
+              >Users</router-link>
+            </li>
+            <li class="nav-item" v-if="authenticated">
+              <router-link
+                class="nav-link"
+                tag="a"
+                :to="{ name: 'permissions' }"
+                active-class="active"
+              >Permission</router-link>
             </li>
             <li class="nav-item" v-if="authenticated">
               <router-link

@@ -18,6 +18,11 @@ import RoleList from "../views/RoleList";
 import RoleView from "../views/RoleView";
 import RoleEdit from "../views/RoleEdit";
 
+import User from "../views/User";
+import UserCreate from "../views/UserCreate";
+import UserView from "../views/UserView";
+import UserEdit from "../views/UserEdit";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -83,15 +88,37 @@ const routes = [
     component: RoleList
   },
   {
-    path: "/roles/:id/details",
+    path: "/role/:id/details",
     name: "role-view",
     component: RoleView,
     props: true
   },
   {
-    path: "/roles/:id/edit",
+    path: "/role/:id/edit",
     name: "role-edit",
     component: RoleEdit,
+    props: true
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: User
+  },
+  {
+    path: "/users/create",
+    name: "user-create",
+    component: UserCreate
+  },
+  {
+    path: "/user/:id/details",
+    name: "user-view",
+    component: UserView,
+    props: true
+  },
+  {
+    path: "/user/:id/edit",
+    name: "user-edit",
+    component: UserEdit,
     props: true
   },
 ];

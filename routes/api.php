@@ -40,3 +40,11 @@ Route::group(['prefix' => 'roles'], function () {
     Route::patch('{role}', 'RoleController@update');
     Route::delete('{role}', 'RoleController@destroy');
 });
+
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', 'UserController@index');
+    Route::post('/', 'UserController@store');
+    Route::get('{user}', 'UserController@show');
+    Route::patch('{user}', 'UserController@update');
+    Route::delete('{user}', 'UserController@destroy');
+});
