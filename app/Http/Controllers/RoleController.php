@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleCollection;
+use App\Http\Resources\RoleResource;
 
 class RoleController extends Controller
 {
@@ -38,7 +39,15 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $role = Role::create([
+            'name' => $request->name
+        ]);
+
+        return new RoleResource($role); 
     }
 
     /**
@@ -49,7 +58,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        return new RoleResource($role);
     }
 
     /**
@@ -61,7 +70,15 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $role->update([
+            'name' => $request->name
+        ]);
+
+        return new RoleResource($role);
     }
 
     /**
@@ -72,6 +89,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->delete();
+
+        return new RoleResource($role);
     }
 }

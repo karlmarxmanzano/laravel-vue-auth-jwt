@@ -52,7 +52,7 @@
               <router-link
                 class="nav-link"
                 tag="a"
-                :to="{ name: 'role' }"
+                :to="{ name: 'roles' }"
                 active-class="active"
               >Roles</router-link>
             </li>

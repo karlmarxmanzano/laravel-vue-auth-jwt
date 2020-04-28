@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::post('signin', 'AuthController@signin');
     Route::post('signup', 'AuthController@signup');
     Route::post('signout', 'AuthController@signout');
@@ -33,10 +33,10 @@ Route::group(['prefix' => 'permissions'], function () {
     Route::delete('{permission}', 'PermissionController@destroy');
 });
 
-Route::group(['middleware' => 'api', 'prefix' => 'roles'], function () {
+Route::group(['prefix' => 'roles'], function () {
     Route::get('/', 'RoleController@index');
     Route::post('/', 'RoleController@store');
     Route::get('{role}', 'RoleController@show');
     Route::patch('{role}', 'RoleController@update');
-    Route::delete('{role}', 'RoleController@delete');
+    Route::delete('{role}', 'RoleController@destroy');
 });

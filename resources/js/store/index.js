@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import auth from "./auth";
-import role from "./role";
-import permission from "./permission";
+
+import auth from "./modules/auth";
+import permission from "./modules/permission";
+import role from "./modules/role";
 
 Vue.use(Vuex);
 

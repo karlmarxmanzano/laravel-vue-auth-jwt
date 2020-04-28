@@ -73,11 +73,15 @@ export default {
                 .then(response => {
                     commit("SET_TOKEN", null);
                     commit("SET_USER", null);
+                    
                     localStorage.setItem("token", "");
                     localStorage.setItem("user", "");
+
+                    window.axios.defaults.headers.common["Authorization"] = "Bearer "
+                    
                 })
                 .catch(error => {
-                    console.log(error.response)
+                    console.log(error)
                 })
         }
     },
